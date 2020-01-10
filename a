@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>aaa</title>
+  <style>
+    body { font-family: 'microsoft Yahei';}
+    .list-item { display: inline-block; width: 100px; height: 36px; line-height: 36px; border: 1px solid #eee; text-align: center; }
+  </style>
+</head>
+<body>
+  <div id="list" class="list">
+    <p class="list-item" v-for="item in hqList">
+      <span class="item-col col-value" :title="item.name">{{item|formatValue}}</span>
+    </p>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.0.3/vue.js"></script>
+  <script>
+  'use strict';
+
+var hqList, vi;
+
+hqList = [
+  { id: 'sz002510', name:'天汽模', currentValue: null },
+  { id: 'sz000026', name: '飞亚达', currentValue: null },
+  { id: 'sh600649', name: '城投', currentValue: null },
+  { id: 'sh600116', name: '三峡水利', currentValue: null },
+  { id: 'sh600116', name: '三峡水利', currentValue: null },
+  { id: 'sh600085', name: '同仁堂', currentValue: null }
+];
+
+vi = new Vue({
+  el: '#list',
+  data: {
+    hqList: hqList
+  },
+  filters: {
+    formatValue: function(item){
+      var value = parseFloat(item.currentValue || item.id, 10);
+      
+      if(typeof value === 'number'){
+        value = value.toFixed(2);
+      }
+      
+      return value + item.name.substring(0, 1);
+    }
+  }
+});
+
+// 加载脚本
+function loadScript(url, callback, error, crossorigin){
+  var script = document.createElement("script");
+  script.type = 'text/javascript';
+  script.src = url;
+  script.onload = script.onreadystatechange = function(){
+    if(!this.readyState || (this.readyState == 'complete' || this.readyState == 'loaded')){
+      script.onreadystatechange = script.onload = null;
+      script = null;
+      if(typeof callback === 'function'){
+        callback();
+      }
+    }
+  };
+  document.body.appendChild(script);
+}
+
+function updateItem(item, i){ 
+  loadScript('https://hq.sinajs.cn/list=' + item.id, ()=>{
+    item.currentValue = window['hq_str_' + item.id].split(',')[3];
+    hqList[i] = item;
+    setTimeout(function(){
+      updateItem(item);
+    }, 2000);
+  });
+}
+
+hqList.forEach(updateItem);
+</script>
+</body>
+</html>
