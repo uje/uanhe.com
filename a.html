@@ -6,13 +6,15 @@
   <title>666</title>
   <style>
     body { font-family: 'microsoft Yahei';}
-    .list-item { display: inline-block; width: 100px; height: 36px; line-height: 36px; text-align: center; }
+    .list { display: none; }
+    .list.show { display: block; }
+    .list-item { display: inline-block; width: 100px; height: 36px; line-height: 36px; text-align: center; border: 1px solid #eee; border-radius: 5px; }
   </style>
 </head>
 <body>
   <div id="list" class="list">
     <p class="list-item" v-for="item in hqList">
-      <span class="item-col col-value" :title="item.name">{{item|formatValue}}</span>
+      <span class="item-col col-value" :title="item.name">{{item.name}}：{{item.currentValue}}</span>
     </p>
   </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.0.3/vue.js"></script>
@@ -75,6 +77,14 @@ function updateItem(item, i){
 }
 
 hqList.forEach(updateItem);
+    
+window.onclick = () => {
+  const list = document.querySelector('.list');
+  list.classList.add('show');
+  setTimeout(() => {
+    list.classList.remove('show');
+  }, 2000);
+};
 </script>
 </body>
 </html>
