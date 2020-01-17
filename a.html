@@ -66,6 +66,7 @@ function loadScript(url, callback, error, crossorigin){
 function updateItem(item, i){ 
   loadScript('https://hq.sinajs.cn/list=' + item.id, ()=>{
     item.currentValue = window['hq_str_' + item.id].split(',')[3];
+    document.title = `${item.id} - ${item.currentValue}`;
     hqList[i] = item;
     setTimeout(function(){
       updateItem(item);
